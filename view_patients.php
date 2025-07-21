@@ -37,8 +37,7 @@ $result = $conn->query("SELECT * FROM patients");
       color: #fff;
     }
   </style>
-    <link rel="stylesheet" href="assets/css/style.css">
-
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 <div class="container py-5">
@@ -54,6 +53,7 @@ $result = $conn->query("SELECT * FROM patients");
           <th>العنوان</th>
           <th>تاريخ الميلاد</th>
           <th>تاريخ الإضافة</th>
+          <th>الإجراءات</th> <!-- عمود الإجراءات -->
         </tr>
       </thead>
       <tbody>
@@ -65,6 +65,14 @@ $result = $conn->query("SELECT * FROM patients");
             <td><?= htmlspecialchars($row['address']) ?></td>
             <td><?= htmlspecialchars($row['dob']) ?></td>
             <td><?= htmlspecialchars($row['created_at']) ?></td>
+            <td>
+              <a href="edit_patient.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-warning">
+                <i class="fas fa-edit"></i> تعديل
+              </a>
+              <a href="delete_patient.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('هل تريد حذف هذا المريض؟')">
+                <i class="fas fa-trash-alt"></i> حذف
+              </a>
+            </td>
           </tr>
         <?php endwhile; ?>
       </tbody>
