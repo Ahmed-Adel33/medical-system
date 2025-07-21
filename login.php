@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     body {
       font-family: 'Cairo', sans-serif;
       background-color: #f0f2f5;
+      overflow: hidden;
     }
     .login-container {
       max-width: 400px;
