@@ -21,16 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>إضافة مريض جديد</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <title>Add New Patient</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Cairo', sans-serif;
-      background-image: url('images/clinic.jpg'); /* تأكد إن الصورة موجودة في المجلد الصحيح */
+      background-image: url('images/clinic.jpg');
       background-size: cover;
       background-position: center;
       min-height: 100vh;
@@ -57,25 +57,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   </style>
   <link rel="stylesheet" href="assets/css/style.css">
-
 </head>
 <body>
   <div class="card">
-    <h3 class="text-center mb-4">🩺 إضافة مريض جديد</h3>
+    <h3 class="text-center mb-4">🩺 Add New Patient</h3>
     <form method="POST">
       <div class="mb-3">
-        <label class="form-label">اسم المريض</label>
+        <label class="form-label">Patient Name</label>
         <input type="text" name="name" class="form-control" required>
       </div>
       <div class="mb-3">
-        <label class="form-label">تاريخ الميلاد</label>
+        <label class="form-label">Date of Birth</label>
         <input type="date" name="dob" class="form-control" required>
       </div>
       <div class="mb-3">
-        <label class="form-label">رقم الهاتف</label>
+        <label class="form-label">Phone Number</label>
         <input type="text" name="phone" class="form-control" required>
       </div>
-      <button type="submit" class="btn btn-primary">💾 حفظ البيانات</button>
+      <button type="submit" class="btn btn-primary">💾 Save Patient</button>
     </form>
   </div>
 </body>

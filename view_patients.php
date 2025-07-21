@@ -11,11 +11,11 @@ $result = $conn->query("SELECT * FROM patients");
 ?>
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>قائمة المرضى</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+  <title>Patient List</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
   <style>
@@ -37,23 +37,22 @@ $result = $conn->query("SELECT * FROM patients");
       color: #fff;
     }
   </style>
-  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 <div class="container py-5">
-  <div class="text-center header-title">قائمة المرضى</div>
+  <div class="text-center header-title">Patient List</div>
 
   <div class="table-responsive">
     <table class="table table-bordered table-hover text-center">
       <thead class="table-dark">
         <tr>
-          <th>الرقم</th>
-          <th>الاسم</th>
-          <th>رقم الهاتف</th>
-          <th>العنوان</th>
-          <th>تاريخ الميلاد</th>
-          <th>تاريخ الإضافة</th>
-          <th>الإجراءات</th> <!-- عمود الإجراءات -->
+          <th>#</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Date of Birth</th>
+          <th>Created At</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -67,10 +66,10 @@ $result = $conn->query("SELECT * FROM patients");
             <td><?= htmlspecialchars($row['created_at']) ?></td>
             <td>
               <a href="edit_patient.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-warning">
-                <i class="fas fa-edit"></i> تعديل
+                <i class="fas fa-edit"></i> Edit
               </a>
-              <a href="delete_patient.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('هل تريد حذف هذا المريض؟')">
-                <i class="fas fa-trash-alt"></i> حذف
+              <a href="delete_patient.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this patient?')">
+                <i class="fas fa-trash-alt"></i> Delete
               </a>
             </td>
           </tr>
@@ -80,7 +79,7 @@ $result = $conn->query("SELECT * FROM patients");
   </div>
 
   <div class="text-center mt-4">
-    <a href="dashboard.php" class="btn btn-outline-light">⬅ رجوع للوحة التحكم</a>
+    <a href="dashboard.php" class="btn btn-outline-light">⬅ Back to Dashboard</a>
   </div>
 </div>
 </body>

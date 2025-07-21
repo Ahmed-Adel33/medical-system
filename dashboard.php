@@ -2,136 +2,97 @@
 session_start();
 include 'config/db.php';
 
-if (!isset($_SESSION['user'])) {
-  header("Location: login.php");
-  exit();
-}
-
-$patients = $conn->query("SELECT COUNT(*) as count FROM patients")->fetch_assoc()['count'];
-$referrals = $conn->query("SELECT COUNT(*) as count FROM referrals")->fetch_assoc()['count'];
-$reports = $conn->query("SELECT COUNT(*) as count FROM reports")->fetch_assoc()['count'];
-$invoices = $conn->query("SELECT COUNT(*) as count FROM invoices")->fetch_assoc()['count'];
+// Fetch statistics
+$patientCount = $conn->query("SELECT COUNT(*) FROM patients")->fetch_row()[0];
+$referralCount = $conn->query("SELECT COUNT(*) FROM referrals")->fetch_row()[0];
+$reportCount = $conn->query("SELECT COUNT(*) FROM reports")->fetch_row()[0];
+$invoiceCount = $conn->query("SELECT COUNT(*) FROM invoices")->fetch_row()[0];
 ?>
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>لوحة التحكم</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       font-family: 'Cairo', sans-serif;
-      background-image: url('assets/images/clinic-bg.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      backdrop-filter: blur(4px);
-      min-height: 100vh;
+      background: #f0f2f5;
     }
     .card {
-      border-radius: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      transition: transform 0.3s;
-      cursor: pointer;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.3s;
     }
     .card:hover {
       transform: scale(1.03);
     }
-    .dashboard-header {
-      font-size: 32px;
-      font-weight: bold;
-      margin-bottom: 35px;
-      color: #fff;
-    }
-    .card h4 {
+    .card-title {
       font-size: 22px;
     }
-    .btn-outline-light {
-      border-radius: 25px;
+    .stat-number {
+      font-size: 36px;
+      font-weight: bold;
+    }
+    .btn-nav {
+      margin: 10px 5px;
     }
   </style>
 </head>
-<body>
+<body class="p-4">
 
-<div class="container py-5">
-  <div class="dashboard-header text-center">لوحة التحكم الرئيسية</div>
+  <div class="container text-center">
+    <h1 class="mb-4">Dashboard</h1>
 
-  <div class="row text-center mb-4">
-    <div class="col-md-3 mb-3">
-      <a href="view_patients.php" style="text-decoration:none">
-        <div class="card text-white bg-primary p-4">
-          <h4><i class="fas fa-user-injured"></i> المرضى</h4>
-          <p class="fs-3"><?= $patients ?></p>
+    <div class="row g-4 mb-5">
+      <div class="col-md-3">
+        <div class="card text-white bg-primary">
+          <div class="card-body">
+            <div class="card-title">Total Patients</div>
+            <div class="stat-number"><?= $patientCount ?></div>
+          </div>
         </div>
-      </a>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-white bg-success">
+          <div class="card-body">
+            <div class="card-title">Total Referrals</div>
+            <div class="stat-number"><?= $referralCount ?></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-white bg-warning">
+          <div class="card-body">
+            <div class="card-title">Total Reports</div>
+            <div class="stat-number"><?= $reportCount ?></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-white bg-danger">
+          <div class="card-body">
+            <div class="card-title">Total Invoices</div>
+            <div class="stat-number"><?= $invoiceCount ?></div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="col-md-3 mb-3">
-      <a href="add_referral.php" style="text-decoration:none">
-        <div class="card text-white bg-success p-4">
-          <h4><i class="fas fa-file-medical"></i> التحويلات</h4>
-          <p class="fs-3"><?= $referrals ?></p>
-        </div>
-      </a>
+    <!-- Navigation Buttons -->
+    <div class="d-flex justify-content-center flex-wrap">
+      <a href="add_patient.php" class="btn btn-outline-primary btn-nav">➕ Add Patient</a>
+      <a href="patients.php" class="btn btn-outline-dark btn-nav">👥 Patient List</a>
+      <a href="add_report.php" class="btn btn-outline-warning btn-nav">📝 Upload Report</a>
+      <a href="referrals.php" class="btn btn-outline-success btn-nav">📄 Referrals</a>
+      <a href="invoices.php" class="btn btn-outline-danger btn-nav">💵 Invoices</a>
+      <a href="add_invoice.php" class="btn btn-success m-2">➕ Add Invoice</a>
+
     </div>
 
-    <div class="col-md-3 mb-3">
-      <a href="final_reports.php" style="text-decoration:none">
-        <div class="card text-white bg-warning p-4">
-          <h4><i class="fas fa-notes-medical"></i> التقارير</h4>
-          <p class="fs-3"><?= $reports ?></p>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-md-3 mb-3">
-      <a href="add_invoice.php" style="text-decoration:none">
-        <div class="card text-white bg-danger p-4">
-          <h4><i class="fas fa-file-invoice-dollar"></i> الفواتير</h4>
-          <p class="fs-3"><?= $invoices ?></p>
-        </div>
-      </a>
-    </div>
   </div>
-
-  <div class="card p-4 mb-4">
-    <h5 class="text-center">الرسم البياني للنشاط</h5>
-    <canvas id="activityChart" height="100"></canvas>
-  </div>
-
-  <div class="text-center mt-3">
-    <a href="add_patient.php" class="btn btn-outline-light me-2">➕ إضافة مريض</a>
-    <a href="logout.php" class="btn btn-outline-light">🚪 تسجيل الخروج</a>
-  </div>
-</div>
-
-<script>
-  const ctx = document.getElementById('activityChart').getContext('2d');
-  const activityChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['المرضى', 'التحويلات', 'التقارير', 'الفواتير'],
-      datasets: [{
-        label: 'إحصائيات النظام',
-        data: [<?= $patients ?>, <?= $referrals ?>, <?= $reports ?>, <?= $invoices ?>],
-        backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545']
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { stepSize: 1 }
-        }
-      }
-    }
-  });
-</script>
 
 </body>
 </html>

@@ -14,7 +14,7 @@ if (!isset($_GET['id'])) {
 
 $report_id = intval($_GET['id']);
 
-// جلب بيانات التقرير مع بيانات المريض
+// Fetch report data along with patient information
 $stmt = $conn->prepare("SELECT rp.id AS report_id, rp.file_path, r.patient_name, r.dob, r.id AS referral_id 
                         FROM reports rp 
                         JOIN referrals r ON rp.referral_id = r.id 
@@ -32,7 +32,7 @@ $report = $result->fetch_assoc();
 $error = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // في حالة رفع ملف جديد
+  // If a new file is uploaded
   if (isset($_FILES['report_file']) && $_FILES['report_file']['error'] == 0) {
     $upload_dir = 'uploads/';
     if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
@@ -42,16 +42,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
     if ($filetype !== 'pdf') {
-      $error = "الملف يجب أن يكون PDF فقط.";
+      $error = "The file must be PDF only.";
     } else {
       $target_file = $upload_dir . time() . "_" . $filename;
       if (move_uploaded_file($file['tmp_name'], $target_file)) {
-        // حذف الملف القديم من السيرفر
+        // Delete old file from server
         if (file_exists($report['file_path'])) {
           unlink($report['file_path']);
         }
 
-        // تحديث المسار في قاعدة البيانات
+        // Update file path in database
         $stmt_update = $conn->prepare("UPDATE reports SET file_path = ?, uploaded_at = NOW() WHERE id = ?");
         $stmt_update->bind_param("si", $target_file, $report_id);
         $stmt_update->execute();
@@ -59,22 +59,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: final_reports.php");
         exit();
       } else {
-        $error = "فشل رفع الملف.";
+        $error = "Failed to upload the file.";
       }
     }
   } else {
-    $error = "يرجى اختيار ملف PDF للرفع.";
+    $error = "Please select a PDF file to upload.";
   }
 }
-
 ?>
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <title>تعديل التقرير</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+  <title>Edit Report</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
     body {
@@ -98,11 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
 <div class="container">
-  <h3 class="mb-4 text-center">تعديل تقرير المريض</h3>
+  <h3 class="mb-4 text-center">Edit Patient Report</h3>
 
-  <p><strong>اسم المريض:</strong> <?= htmlspecialchars($report['patient_name']) ?></p>
-  <p><strong>تاريخ الميلاد:</strong> <?= htmlspecialchars($report['dob']) ?></p>
-  <p><strong>التقرير الحالي:</strong> <a href="<?= htmlspecialchars($report['file_path']) ?>" target="_blank">عرض / تحميل</a></p>
+  <p><strong>Patient Name:</strong> <?= htmlspecialchars($report['patient_name']) ?></p>
+  <p><strong>Date of Birth:</strong> <?= htmlspecialchars($report['dob']) ?></p>
+  <p><strong>Current Report:</strong> <a href="<?= htmlspecialchars($report['file_path']) ?>" target="_blank">View / Download</a></p>
 
   <?php if ($error): ?>
     <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
@@ -110,11 +109,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <form method="POST" enctype="multipart/form-data">
     <div class="mb-3">
-      <label for="report_file" class="form-label">رفع تقرير PDF جديد</label>
+      <label for="report_file" class="form-label">Upload New PDF Report</label>
       <input type="file" name="report_file" id="report_file" class="form-control" accept="application/pdf" required />
     </div>
-    <button type="submit" class="btn btn-primary w-100">تحديث التقرير</button>
-    <a href="final_reports.php" class="btn btn-secondary w-100 mt-2">عودة للتقارير</a>
+    <button type="submit" class="btn btn-primary w-100">Update Report</button>
+    <a href="final_reports.php" class="btn btn-secondary w-100 mt-2">Back to Reports</a>
   </form>
 </div>
 

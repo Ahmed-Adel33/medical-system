@@ -16,23 +16,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: dashboard.php");
     exit();
   } else {
-    $error = "اسم المستخدم أو كلمة المرور غير صحيحة.";
+    $error = "Invalid username or password.";
   }
 }
 ?>
 
-
-
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>تسجيل الدخول</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <title>Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Cairo', sans-serif;
+      font-family: 'Roboto', sans-serif;
       background-color: #f0f2f5;
       overflow: hidden;
     }
@@ -46,25 +44,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
   </style>
   <link rel="stylesheet" href="assets/css/style.css">
-
 </head>
 <body>
 <div class="login-container">
   <div class="card p-4">
-    <h3 class="text-center mb-4">تسجيل الدخول</h3>
+    <h3 class="text-center mb-4">Login</h3>
     <?php if (!empty($error)): ?>
       <div class="alert alert-danger"><?= $error ?></div>
     <?php endif; ?>
     <form method="POST" action="login.php">
       <div class="mb-3">
-        <label class="form-label">اسم المستخدم</label>
+        <label class="form-label">Username</label>
         <input type="text" name="username" class="form-control" required>
       </div>
       <div class="mb-3">
-        <label class="form-label">كلمة المرور</label>
+        <label class="form-label">Password</label>
         <input type="password" name="password" class="form-control" required>
       </div>
-      <button type="submit" class="btn btn-primary w-100">دخول</button>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
     </form>
   </div>
 </div>

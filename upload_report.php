@@ -2,10 +2,10 @@
 session_start();
 include 'config/db.php';
 
-// جلب بيانات المرضى من جدول referrals
+// Fetch referrals data (linked patients)
 $referrals = $conn->query("SELECT id, patient_name FROM referrals");
 
-// التعامل مع رفع التقرير
+// Handle report upload
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $referral_id = $_POST['referral_id'];
   $upload_dir = 'uploads/';
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $filetype = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
   if ($filetype !== 'pdf') {
-    die('❌ الملف يجب أن يكون PDF فقط.');
+    die('❌ Only PDF files are allowed.');
   }
 
   if (move_uploaded_file($file['tmp_name'], $target_file)) {
@@ -27,17 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header("Location: final_reports.php");
     exit();
   } else {
-    echo "❌ فشل في رفع الملف.";
+    echo "❌ Failed to upload the report.";
   }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>رفع تقرير طبي</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <title>Upload Medical Report</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
   <style>
     body {
@@ -55,27 +55,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   </style>
   <link rel="stylesheet" href="assets/css/style.css">
-
 </head>
 <body>
 
 <div class="form-container">
-  <h3 class="mb-4 text-center">📄 رفع تقرير جديد</h3>
+  <h3 class="mb-4 text-center">📄 Upload New Report</h3>
   <form method="POST" enctype="multipart/form-data">
     <div class="mb-3">
-      <label class="form-label">اختر اسم المريض</label>
+      <label class="form-label">Select Patient Name</label>
       <select name="referral_id" class="form-control" required>
-        <option value="">-- اختر المريض --</option>
+        <option value="">-- Select Patient --</option>
         <?php while ($row = $referrals->fetch_assoc()): ?>
           <option value="<?= $row['id'] ?>"><?= htmlspecialchars($row['patient_name']) ?> (ID: <?= $row['id'] ?>)</option>
         <?php endwhile; ?>
       </select>
     </div>
     <div class="mb-3">
-      <label class="form-label">ملف التقرير (PDF فقط)</label>
+      <label class="form-label">Report File (PDF only)</label>
       <input type="file" name="report_file" class="form-control" accept="application/pdf" required>
     </div>
-    <button type="submit" class="btn btn-primary w-100">رفع التقرير</button>
+    <button type="submit" class="btn btn-primary w-100">Upload Report</button>
   </form>
 </div>
 

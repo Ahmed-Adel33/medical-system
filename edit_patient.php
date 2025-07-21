@@ -7,14 +7,14 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-// تحقق من وجود ID
+// Check if ID is provided
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    die("رقم المريض غير صالح.");
+    die("Invalid patient ID.");
 }
 
 $patient_id = intval($_GET['id']);
 
-// إذا تم إرسال النموذج
+// If the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $phone = $_POST['phone'];
@@ -28,11 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: view_patients.php?updated=1");
         exit();
     } else {
-        $error = "حدث خطأ أثناء التحديث.";
+        $error = "An error occurred while updating.";
     }
 }
 
-// جلب بيانات المريض
+// Get patient data
 $stmt = $conn->prepare("SELECT * FROM patients WHERE id=?");
 $stmt->bind_param("i", $patient_id);
 $stmt->execute();
@@ -40,16 +40,16 @@ $result = $stmt->get_result();
 $patient = $result->fetch_assoc();
 
 if (!$patient) {
-    die("المريض غير موجود.");
+    die("Patient not found.");
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <title>تعديل بيانات المريض</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <title>Edit Patient Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
     <style>
         body {
@@ -73,28 +73,28 @@ if (!$patient) {
 <body>
 <div class="container">
     <div class="form-container mx-auto col-md-8">
-        <div class="header-title text-center">تعديل بيانات المريض</div>
+        <div class="header-title text-center">Edit Patient Details</div>
         <?php if (isset($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
 
         <form method="POST">
             <div class="mb-3">
-                <label class="form-label">الاسم:</label>
+                <label class="form-label">Name:</label>
                 <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($patient['name']) ?>" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">رقم الهاتف:</label>
+                <label class="form-label">Phone Number:</label>
                 <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($patient['phone']) ?>" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">العنوان:</label>
+                <label class="form-label">Address:</label>
                 <input type="text" name="address" class="form-control" value="<?= htmlspecialchars($patient['address']) ?>" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">تاريخ الميلاد:</label>
+                <label class="form-label">Date of Birth:</label>
                 <input type="date" name="dob" class="form-control" value="<?= htmlspecialchars($patient['dob']) ?>" required>
             </div>
-            <button type="submit" class="btn btn-success">حفظ التعديلات</button>
-            <a href="view_patients.php" class="btn btn-secondary">رجوع</a>
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a href="view_patients.php" class="btn btn-secondary">Back</a>
         </form>
     </div>
 </div>
